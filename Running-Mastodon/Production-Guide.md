@@ -31,7 +31,9 @@ multiple terminal windows inside it for separate contexts (root user vs. mastodo
 
 You can install `tmux` from the package manager:
 
-`apt -y install tmux`
+```sh
+apt -y install tmux
+```
 
 ## Dependency installation
 
@@ -43,15 +45,21 @@ require.
 
 Download this script:
 
-`wget https://deb.nodesource.com/setup_6.x`
+```sh
+wget https://deb.nodesource.com/setup_6.x
+```
 
 Review the script download before running:
 
-`less setup_6.x`
+```sh
+less setup_6.x
+```
 
 Once you have reviewed the script, run it
 
-`bash setup_6.x`
+```sh
+bash setup_6.x
+```
 
 The required node.js repository is now added.
 
@@ -59,12 +67,16 @@ The required node.js repository is now added.
 
 Now we will install all the required software:
 
-`apt -y install imagemagick ffmpeg libpq-dev libxml2-dev libxslt1-dev file git 
+```sh
+apt -y install imagemagick ffmpeg libpq-dev libxml2-dev libxslt1-dev file git 
 curl g++ libprotobuf-dev protobuf-compiler pkg-config nodejs gcc-6 autoconf bison 
 build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev 
 libffi-dev libgdbm3 libgdbm-dev nginx redis-server redis-tools postgresql 
-postgresql-contrib nginx letsencrypt`
+postgresql-contrib nginx letsencrypt
+```
 
 Install `yarn` from npm:
 
-`npm install -g yarn`
+```sh
+npm install -g yarn
+```
