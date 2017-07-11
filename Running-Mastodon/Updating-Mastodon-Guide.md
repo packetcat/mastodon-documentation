@@ -56,3 +56,14 @@ This is how you update node.js dependencies:
 cd ~/live
 yarn install
 ```
+
+## Database schema updates
+
+You may need to update database schema upon upgrading to a new Mastodon release.
+The aforementioned release notes will mention if you need to do the rest of this section.
+
+This is how you run a database migration:
+```sh
+cd ~/live
+RAILS_ENV=production bundle exec rails db:migrate
+```
