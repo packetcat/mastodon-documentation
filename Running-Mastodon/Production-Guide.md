@@ -154,3 +154,21 @@ yarn install --pure-lockfile
 ```
 That is all we need to do for now with the mastodon user, you can `exit` back to root
 or if using `tmux` switch back to the window where you are logged in as root.
+
+## PostgreSQL database creation
+
+Mastodon requires access to a PostgreSQL instance.
+
+Let us create a user for that access:
+```
+# Launch psql as the postgres user
+sudo -u postgres psql
+
+# In the following prompt
+CREATE USER mastodon CREATEDB;
+\q
+```
+
+Note that we do not set up a password of any kind, this is because we will be using 
+ident authentication. This allows local users to the database without a
+password.
