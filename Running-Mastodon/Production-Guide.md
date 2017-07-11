@@ -172,3 +172,190 @@ CREATE USER mastodon CREATEDB;
 Note that we do not set up a password of any kind, this is because we will be using 
 ident authentication. This allows local users to the database without a
 password.
+
+## nginx configuration
+
+You will need to configure nginx to correctly serve your Mastodon instance to the world.
+
+(Reminder: Make sure to replace all instances of example.com with your own instance's domain
+sub-domain.)
+
+Open a file in `/etc/nginx/sites-available`:
+
+`nano /etc/nginx/sites-available/example.com.conf`
+
+Copy and paste the following and then edit as necessary:
+
+```nginx
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  ''      close;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name example.com;
+  # Useful for Let's Encrypt
+  location /.well-known/acme-challenge/ { allow all; }
+  location / { return 301 https://$host$request_uri; }
+}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name example.com;
+
+  ssl_protocols TLSv1.2;
+  ssl_ciphers HIGH:!MEDIUM:!LOW:!aNULL:!NULL:!SHA;
+  ssl_prefer_server_ciphers on;
+  ssl_session_cache shared:SSL:10m;
+
+  ssl_certificate     /etc/letsencrypt/live/example.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+
+  keepalive_timeout    70;
+  sendfile             on;
+  client_max_body_size 0;
+
+  root /home/mastodon/live/public;
+
+  gzip on;
+  gzip_disable "msie6";
+  gzip_vary on;
+  gzip_proxied any;
+  gzip_comp_level 6;
+  gzip_buffers 16 8k;
+  gzip_http_version 1.1;
+  gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+  add_header Strict-Transport-Security "max-age=31536000";
+
+  location / {
+    try_files $uri @proxy;
+  }
+
+  location ~ ^/(packs|system/media_attachments/files|system/accounts/avatars) {
+    add_header Cache-Control "public, max-age=31536000, immutable";
+    try_files $uri @proxy;
+  }
+
+  location @proxy {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header Proxy "";
+    proxy_pass_header Server;
+
+    proxy_pass http://127.0.0.1:3000;
+    proxy_buffering off;
+    proxy_redirect off;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+
+    tcp_nodelay on;
+  }
+
+  location /api/v1/streaming {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header Proxy "";
+
+    proxy_pass http://127.0.0.1:4000;
+    proxy_buffering off;
+    proxy_redirect off;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+
+    tcp_nodelay on;
+  }
+
+  error_page 500 501 502 503 504 /500.html;
+}
+```
+
+Activate the nginx config we just added:
+
+```sh 
+cd /etc/nginx/sites-enabled
+ln -s ../sites-available/example.com.conf
+```
+
+This config assumes you are using Let's Encrypt as your TLS certificate provider.
+
+If you are going to be using Let's Encrypt as your TLS certificate provider, see the 
+next sub-section. If not edit the `ssl_certificate` and `ssl_certificate_key` values
+accordingly.
+
+### Let's Encrypt
+
+This section is only relevant if you are using [Let's Encrypt](https://letsencrypt.org/)
+as your TLS certificate provider.
+
+#### Generation of certificate
+
+We will need to generate Let's Encrypt certificates.
+
+Make sure to replace any instances of 'example.com' with your Mastodon instance's domain.
+
+Also make sure that nginx is stopped at this point:
+
+```sh
+systemctl stop nginx
+```
+
+We will be creating the certificate twice, once with TLS SNI validation in standalone mode
+and the second time we will be using the webroot method. This is required due to the way
+nginx and the letsencrypt tool works.
+
+The TLS SNI standalone method requires nginx stopped as previously mentioned:
+
+```sh 
+letsencrypt certonly --standalone -d example.com
+```
+
+After that successfully completes, we will use the webroot method. This requires nginx
+to be started and running:
+
+```sh
+systemctl start nginx
+# The letsencrypt tool will ask if you want issue a new cert, please choose that option
+letsencrypt certonly --webroot -d example.com -w /home/mastodon/live/public/
+```
+
+#### Automated renewal of Let's Encrypt certificate
+
+Let's Encrypt certificates have a validity period of 90 days.
+
+You need to renew your certificate before the expiration date. Failure to do so will
+result in your users being unable to access your instance and other instances being unable 
+to federate with yours.
+
+We can do this with a cron job that runs daily:
+
+```sh
+nano /etc/cron.daily/letsencrypt-renew
+```
+
+Copy and paste this script into that file:
+
+```sh
+#!/usr/bin/env bash
+letsencrypt renew
+systemctl reload nginx
+```
+
+Save and exit the file.
+
+Make the script executable and restart the cron daemon so that the script runs daily:
+```sh
+chmod +x /etc/cron.daily/letsencrypt-renew
+systemctl restart cron
+```
+
+That is it. Your server will now automatically renew your Let's Encrypt certificate(s).
