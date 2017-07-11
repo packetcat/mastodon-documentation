@@ -54,7 +54,7 @@ bundle install --deployment --without development test
 This is how you update node.js dependencies:
 ```sh
 cd ~/live
-yarn install
+yarn install --pure-lockfile
 ```
 
 ## Database schema updates
