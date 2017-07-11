@@ -21,3 +21,14 @@ Before we do anything on the server, add the DNS records necessary.
 You will need to add:
 * An A record (IPv4 address) for example.com
 * An AAAA record (IPv6 address, if IPv6 connectivity is present) for example.com
+
+## A helpful and optional note
+
+Use `tmux` when following through with this guide.
+
+Not only will this help you not lose your place if you disconnect, it will let you have
+multiple terminal windows inside it for separate contexts (root user vs. mastodon user).
+
+You can install `tmux` from the package manager:
+`apt -y install tmux`
+
