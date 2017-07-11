@@ -430,3 +430,91 @@ RAILS_ENV=production bundle exec rails assets:precompile
 
 The assets pre-compilation takes a couple minutes, so this is a good time to take
 another break.
+
+## Mastodon systemd service files
+
+We will need three systemd service files for each Mastodon service.
+
+Switch back to the root user (either by `exit` or by switching to the correct tmux window).
+
+For the Mastodon web workers service, to be placed in `/etc/systemd/system/mastodon-web.service`:
+
+```
+[Unit]
+Description=mastodon-web
+After=network.target
+
+[Service]
+Type=simple
+User=mastodon
+WorkingDirectory=/home/mastodon/live
+Environment="RAILS_ENV=production"
+Environment="PORT=3000"
+ExecStart=/home/mastodon/.rbenv/shims/bundle exec puma -C config/puma.rb
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+For the Mastodon background queue service, to be placed in `/etc/systemd/system/mastodon-sidekiq.service`:
+
+```
+[Unit]
+Description=mastodon-sidekiq
+After=network.target
+
+[Service]
+Type=simple
+User=mastodon
+WorkingDirectory=/home/mastodon/live
+Environment="RAILS_ENV=production"
+Environment="DB_POOL=5"
+ExecStart=/home/mastodon/.rbenv/shims/bundle exec sidekiq -c 5 -q default -q mailers -q pull -q push
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+For the Mastodon streaming API service, to be placed in `/etc/systemd/system/mastodon-streaming.service`:
+
+```
+[Unit]
+Description=mastodon-streaming
+After=network.target
+
+[Service]
+Type=simple
+User=mastodon
+WorkingDirectory=/home/mastodon/live
+Environment="NODE_ENV=production"
+Environment="PORT=4000"
+ExecStart=/usr/bin/npm run start
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Now you will need to enable all of these services:
+
+```sh
+systemctl enable /etc/systemd/system/mastodon-*.service
+```
+
+Now start the Mastodon services:
+
+```sh
+systemctl start mastodon-web.service
+systemctl start mastodon-sidekiq.service
+systemctl start mastodon-streaming.service
+```
+
+That is it. If all above went successfully, you will get a Mastodon instance when you
+visit https://example.com in a web browser.
+
+Congratulations and have fun!
