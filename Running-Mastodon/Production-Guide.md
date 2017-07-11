@@ -30,5 +30,6 @@ Not only will this help you not lose your place if you disconnect, it will let y
 multiple terminal windows inside it for separate contexts (root user vs. mastodon user).
 
 You can install `tmux` from the package manager:
+
 `apt -y install tmux`
 
