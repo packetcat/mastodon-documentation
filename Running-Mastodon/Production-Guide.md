@@ -9,10 +9,18 @@ Replace all instances of example.com with your instance domain or sub-domain.
 
 ## Pre-requisites
 
-You will need the following:
-* A server running Ubuntu 16.04
+You will need the following for this guide:
+* A server running Ubuntu Server 16.04
 * Root access to aforementioned server
 * A domain or sub-domain to use for your instance
+
+Disclaimer:
+
+This guide supports Ubuntu Server 16.04 only. If you try to use this on a different
+version of Ubuntu, you may run into issues.
+
+If you are looking for a guide on a different distribution, this repository is welcoming to
+contributions.
 
 ## DNS
 
