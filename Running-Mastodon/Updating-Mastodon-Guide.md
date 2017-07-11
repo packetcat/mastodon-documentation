@@ -48,7 +48,7 @@ The aforementioned release notes will mention if you need to do the rest of this
 This is how you update Ruby dependencies:
 ```sh
 cd ~/live
-bundle install
+bundle install --deployment --without development test
 ```
 
 This is how you update node.js dependencies:
