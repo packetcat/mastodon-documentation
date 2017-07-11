@@ -68,11 +68,7 @@ The required node.js repository is now added.
 Now we will install all the required software:
 
 ```sh
-apt -y install imagemagick ffmpeg libpq-dev libxml2-dev libxslt1-dev file git 
-curl g++ libprotobuf-dev protobuf-compiler pkg-config nodejs gcc-6 autoconf bison 
-build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev 
-libffi-dev libgdbm3 libgdbm-dev nginx redis-server redis-tools postgresql 
-postgresql-contrib nginx letsencrypt
+apt -y install imagemagick ffmpeg libpq-dev libxml2-dev libxslt1-dev file git curl g++ libprotobuf-dev protobuf-compiler pkg-config nodejs gcc-6 autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev nginx redis-server redis-tools postgresql postgresql-contrib nginx letsencrypt
 ```
 
 Install `yarn` from npm:
