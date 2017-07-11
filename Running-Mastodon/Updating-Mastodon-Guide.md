@@ -48,19 +48,20 @@ The aforementioned release notes will mention if you need to do the rest of this
 This is how you update Ruby dependencies:
 ```sh
 cd ~/live
-bundle install
+bundle install --deployment --without development test
 ```
 
 This is how you update node.js dependencies:
 ```sh
 cd ~/live
-yarn install
+yarn install --pure-lockfile
 ```
 
 ## Database schema updates
 
-You may need to update database schema upon updating to a new Mastodon release.
-The aforementioned release notes will mention if you need to do the rest of this section.
+Run a database schema every time you update to a new Mastodon release.
+It is safe to run this every time as it is a [no-op](https://en.wikipedia.org/wiki/NOP) if there are no database
+schema updates.
 
 This is how you run a database migration:
 ```sh
