@@ -35,6 +35,8 @@ You can install `tmux` from the package manager:
 
 ## Dependency installation
 
+All of this dependency installation should be done as root.
+
 ### node.js repository addition
 You will need to add a new external repository so we can have the version of node.js we
 require.
@@ -53,3 +55,16 @@ Once you have reviewed the script, run it
 
 The required node.js repository is now added.
 
+### Install all other required software and dependencies
+
+Now we will install all the required software:
+
+`apt -y install imagemagick ffmpeg libpq-dev libxml2-dev libxslt1-dev file git 
+curl g++ libprotobuf-dev protobuf-compiler pkg-config nodejs gcc-6 autoconf bison 
+build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev 
+libffi-dev libgdbm3 libgdbm-dev nginx redis-server redis-tools postgresql 
+postgresql-contrib nginx letsencrypt`
+
+Install `yarn` from npm:
+
+`npm install -g yarn`
