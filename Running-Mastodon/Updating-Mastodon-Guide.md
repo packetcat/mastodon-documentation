@@ -90,3 +90,18 @@ This is how you stop the Mastodon services (as root):
 ```sh
 systemctl stop mastodon-*
 ```
+
+## Restarting Mastodon services
+
+Mastodon runs in memory so you will need to restart it for any of the previous updates to take 
+effect.
+
+This is how you restart Mastodon services (as root):
+```sh
+systemctl restart mastodon-*.service
+```
+
+If you stopped the Mastodon services earlier as part of the assets pre-compile, replace
+the 'restart' with a 'start'.
+
+You now have an updated Mastodon instance. Keep up the good work!
