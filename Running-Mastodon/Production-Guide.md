@@ -33,3 +33,23 @@ You can install `tmux` from the package manager:
 
 `apt -y install tmux`
 
+## Dependency installation
+
+### node.js repository addition
+You will need to add a new external repository so we can have the version of node.js we
+require.
+
+Download this script:
+
+`wget https://deb.nodesource.com/setup_6.x`
+
+Review the script download before running:
+
+`less setup_6.x`
+
+Once you have reviewed the script, run it
+
+`bash setup_6.x`
+
+The required node.js repository is now added.
+
