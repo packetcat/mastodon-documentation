@@ -39,3 +39,20 @@ nothing to commit, working directory clean
 
 The above output indicates that my local repository copy is using the tagged release 'v1.4.7'
 of Mastodon.
+
+## Ruby and node.js dependency updates
+
+You may need to update Ruby and node.js upon upgrading to a new Mastodon release.
+The aforementioned release notes will mention if you need to do the rest of this section.
+
+This is how you update Ruby dependencies:
+```sh
+cd ~/live
+bundle install
+```
+
+This is how you update node.js dependencies:
+```sh
+cd ~/live
+yarn install
+```
