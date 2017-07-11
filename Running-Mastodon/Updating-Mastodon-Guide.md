@@ -42,7 +42,7 @@ of Mastodon.
 
 ## Ruby and node.js dependency updates
 
-You may need to update Ruby and node.js upon upgrading to a new Mastodon release.
+You may need to update Ruby and node.js upon updating to a new Mastodon release.
 The aforementioned release notes will mention if you need to do the rest of this section.
 
 This is how you update Ruby dependencies:
@@ -59,11 +59,34 @@ yarn install
 
 ## Database schema updates
 
-You may need to update database schema upon upgrading to a new Mastodon release.
+You may need to update database schema upon updating to a new Mastodon release.
 The aforementioned release notes will mention if you need to do the rest of this section.
 
 This is how you run a database migration:
 ```sh
 cd ~/live
 RAILS_ENV=production bundle exec rails db:migrate
+```
+
+## Pre-compiling updated assets
+
+You may need to pre-compile updated assets upon updating to a new Mastodon release.
+The aforementioned release notes will mention if you need to do the rest of this section.
+
+This is how you pre-compile assets:
+```sh
+cd ~/live
+RAILS_ENV=production bundle exec rails assets:precompile
+```
+
+A caveat:
+
+The assets pre-compiler ([Webpacker](https://github.com/rails/webpacker)) can take up 
+a non-trivial amount of resources, particularly RAM. If you find that your server is 
+running out of RAM when running the pre-compile, I recommend stopping the Mastodon services
+before starting the pre-compile.
+
+This is how you stop the Mastodon services (as root):
+```sh
+systemctl stop mastodon-*
 ```
