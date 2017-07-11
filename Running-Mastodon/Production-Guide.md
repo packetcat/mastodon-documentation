@@ -359,3 +359,74 @@ systemctl restart cron
 ```
 
 That is it. Your server will now automatically renew your Let's Encrypt certificate(s).
+
+## Mastodon application configuration
+
+Now we will need to configure the Mastodon application.
+
+For this we will need to go back to the mastodon system user (or if you are using tmux
+switch back to the window that has that user logged in):
+
+```sh
+su - mastodon
+```
+
+Change directory to ~live and edit the Mastodon application configuration:
+
+```sh
+cd ~/live
+cp .env.production.sample .env.production
+nano .env.production
+```
+
+For the purposes of this guide, these are the values that need to be edited:
+
+```
+# Your Redis host
+REDIS_HOST=127.0.0.1
+# Your Redis port
+REDIS_PORT=6379
+# Your PostgreSQL host
+DB_HOST=/var/run/postgresql
+# Your PostgreSQL user
+DB_USER=mastodon
+# Your PostgreSQL DB name
+DB_NAME=mastodon_production
+# Leave DB password empty
+DB_PASS=
+# Your DB_PORT
+DB_PORT=5432
+
+# Your instance's domain
+LOCAL_DOMAIN=example.com
+# We have HTTPS enabled
+LOCAL_HTTPS=true
+
+# Application secrets
+# Generate each eith `RAILS_ENV=production bundle exec rake secret`
+PAPERCLIP_SECRET=
+SECRET_KEY_BASE=
+OTP_SECRET=
+
+# All SMTP details, Mailgun and Sparkpost have free tiers
+SMTP_SERVER=
+SMTP_PORT=
+SMTP_LOGIN=
+SMTP_PASSWORD=
+SMTP_FROM_ADDRESS=
+```
+
+After that is complete, we will need to set up the PostgreSQL database for the first time:
+
+```sh
+RAILS_ENV=production bundle exec rails db:setup
+```
+
+And then we will need to pre-compile all CSS and JavaScript files:
+
+```sh
+RAILS_ENV=production bundle exec rails assets:precompile
+```
+
+The assets pre-compilation takes a couple minutes, so this is a good time to take
+another break.
