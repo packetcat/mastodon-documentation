@@ -71,18 +71,23 @@ bash setup_6.x
 
 The required node.js repository is now added.
 
+## Yarn repository addition
+You will need to add another external repository so we can have the version yarn we require.
+
+This is how you do that:
+```sh
+apt -y install curl
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+apt update
+```
+
 ### Install all other required software and dependencies (root user)
 
 Now we will install all the required software:
 
 ```sh
-apt -y install imagemagick ffmpeg libpq-dev libxml2-dev libxslt1-dev file git curl g++ libprotobuf-dev protobuf-compiler pkg-config nodejs gcc-6 autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev nginx redis-server redis-tools postgresql postgresql-contrib nginx letsencrypt
-```
-
-Install `yarn` from npm:
-
-```sh
-npm install -g yarn
+apt -y install imagemagick ffmpeg libpq-dev libxml2-dev libxslt1-dev file git g++ libprotobuf-dev protobuf-compiler pkg-config nodejs gcc-6 autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev nginx redis-server redis-tools postgresql postgresql-contrib nginx letsencrypt yarn
 ```
 
 ### Install dependencies as the mastodon system user
