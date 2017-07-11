@@ -63,7 +63,7 @@ bash setup_6.x
 
 The required node.js repository is now added.
 
-### Install all other required software and dependencies
+### Install all other required software and dependencies (root user)
 
 Now we will install all the required software:
 
@@ -76,3 +76,73 @@ Install `yarn` from npm:
 ```sh
 npm install -g yarn
 ```
+
+### Install dependencies as the mastodon system user
+
+As the title of this sub-section suggests, you will need to install some Mastodon dependencies
+as a non-root user.
+
+Let us create this user first:
+
+```sh
+adduser mastodon
+```
+
+Log in as the `mastodon` user:
+
+```sh
+# If you are using tmux like previously suggested you can do this in a new window 
+# Ctrl-B -> Shift-:new-window
+su - mastodon
+```
+
+First thing, we will need to set up `rbenv` and `ruby-build`:
+
+```sh
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+cd ~/.rbenv && src/configure && make -C src
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+# Restart shell
+exec bash
+# Check if rbenv is correctly installed
+type rbenv
+# Install ruby-build as rbenv plugin
+git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+```
+
+Now that `rbenv` and `ruby-build` are installed, we will need to install the correct
+Ruby version that Mastodon needs. Aforementioned Ruby version will also need to be enabled.
+
+This is how we do that:
+```sh
+rbenv install 2.4.1
+rbenv global 2.4.1
+```
+
+The compilation of Ruby can take some time depending on how much system resources are
+available. This is a good time to go take a break, get a drink, stretch your legs, etc.
+
+#### node.js and Ruby dependencies
+
+Now that we have Ruby compiled and ready to go, we can clone the Mastodon git repository
+and install the node.js and Ruby dependencies needed.
+
+This is how we do that:
+```sh
+# Return to mastodon user's home directory
+cd ~
+# Clone the mastodon git repository into ~/live
+git clone https://github.com/tootsuite/mastodon.git live
+# Change directory to ~live
+cd ~/live
+# Checkout to the latest stable branch
+git checkout $(git tag -l | sort -V | tail -n 1)
+# Install bundler
+gem install bundler
+# Use bundler to install the rest of the Ruby dependencies
+bundle install --deployment --without development test
+# Use yarn to install node.js dependencies
+yarn install --pure-lockfile
+```
+That is all we need to do for now with the mastodon user, you can `exit` back to root
+or if using `tmux` switch back to the window where you are logged in as root.
