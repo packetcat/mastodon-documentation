@@ -5,7 +5,7 @@
 This guide a walk through of the setup process of a Mastodon instance.
 
 I will be using example.com for all mentions of a domain or sub-domain.
-Replace all instances of example.com with your instance domain or sub-domain.
+Replace all occurrences of example.com with your instance domain or sub-domain.
 
 ## Pre-requisites
 
@@ -177,7 +177,7 @@ password.
 
 You will need to configure nginx to correctly serve your Mastodon instance to the world.
 
-(Reminder: Make sure to replace all instances of example.com with your own instance's domain
+(Reminder: Make sure to replace all occurrences of example.com with your own instance's domain
 sub-domain.)
 
 Open a file in `/etc/nginx/sites-available`:
@@ -301,7 +301,7 @@ as your TLS certificate provider.
 
 We will need to generate Let's Encrypt certificates.
 
-Make sure to replace any instances of 'example.com' with your Mastodon instance's domain.
+Make sure to replace any occurrence of 'example.com' with your Mastodon instance's domain.
 
 Also make sure that nginx is stopped at this point:
 
