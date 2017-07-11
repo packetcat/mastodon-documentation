@@ -6,8 +6,6 @@ This guide was written for [Ubuntu Server 16.04](https://www.ubuntu.com/server),
 
 This document is also written with the expectation that you have a technical level high enough to administrate Linux servers.
 
-----
-
 ## What is this guide?
 
 This guide a walk through of the setup process of a [Mastodon](https://github.com/tootsuite/mastodon/) instance.
@@ -19,7 +17,7 @@ We use example.com to represent a domain or sub-domain. Example.com should be re
 You will need the following for this guide:
 
 - A server running [Ubuntu Server 16.04](https://www.ubuntu.com/server).
-- Root access to the aforementioned server.
+- Root access to the server.
 - A domain or sub-domain to use for the instance.
 
 ## DNS
@@ -31,21 +29,18 @@ The records added are:
 -  A record (IPv4 address) for example.com
 -  AAAA record (IPv6 address) for example.com
 
-----
-
-> ### A helpful and optional note
+> ### A Helpful And Optional Note
 >
 > Using `tmux` when following through with this guide will be helpful.
+> 
 >
-> Not only will this help you not lose your place if you are disconnected, it will let you have multiple terminal windows open for different contexts (root user versus the mastodon user).
-
+> Not only will this help you not lose your place if you are disconnected, it will let you have multiple terminal windows open for switching contexts (root user versus the mastodon user).
+>
 > You can install [tmux](https://github.com/tmux/tmux/wiki) from the package manager:
-
+>
 > ```sh
 > apt -y install tmux
 > ```
-
-----
 
 ## Dependency Installation
 
@@ -53,7 +48,7 @@ All dependencies should be installed as root.
 
 ### node.js Repository
 
-You will need to add a new external repository so we can have the version of [node.js](https://nodejs.org/en/) required.
+You will need to add an external repository so we can have the version of [node.js](https://nodejs.org/en/) required.
 
 Download this script:
 
@@ -73,13 +68,13 @@ Once you have reviewed the script, run it
 bash setup_6.x
 ```
 
-The required [node.js](https://nodejs.org/en/) repository is now added.
+The [node.js](https://nodejs.org/en/) repository is now added.
 
 ###  Yarn Repository
 
-Another repository needs to be added so we can get the required version of [Yarn](https://yarnpkg.com/en/).
+Another repository needs to be added so we can get the version of [Yarn](https://yarnpkg.com/en/) used by [Mastodon](https://github.com/tootsuite/mastodon/).
 
-This is how you do that:
+This is how you add the repository:
 
 ```sh
 apt -y install curl
@@ -90,7 +85,7 @@ apt update
 
 ### Various Other Dependancies
 
-Now you need to install [Yarn](https://yarnpkg.com/en/) plus a bunch of other pieces of software.
+Now you need to install [Yarn](https://yarnpkg.com/en/) plus some more software.
 
 ```sh
 apt -y install imagemagick ffmpeg libpq-dev libxml2-dev libxslt1-dev file git g++ libprotobuf-dev protobuf-compiler pkg-config nodejs gcc-6 autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev nginx redis-server redis-tools postgresql postgresql-contrib nginx letsencrypt yarn
@@ -104,17 +99,14 @@ Let us create this user first:
 adduser mastodon
 ```
 
-Log in as the `mastodon` user[^1]:
-
-[^1]: If you are using [tmux](https://github.com/tmux/tmux/wiki) like previously suggested you can do this in a new window: 
-``` Ctrl-B -> Shift-:new-window```
+Log in as the `mastodon` user:
 
 
 ```sh
 su - mastodon
 ```
 
-First thing, we will need to set up [`rbenv`](https://github.com/rbenv/rbenv) and [`ruby-build`](https://github.com/rbenv/ruby-build):
+We will need to set up [`rbenv`](https://github.com/rbenv/rbenv) and [`ruby-build`](https://github.com/rbenv/ruby-build):
 
 ```sh
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
@@ -129,7 +121,7 @@ git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
 ```
 
 Now that [`rbenv`](https://github.com/rbenv/rbenv) and [`ruby-build`](https://github.com/rbenv/ruby-build) are installed, we will install the
-[Ruby](https://github.com/rails/rails) version that [Mastodon](https://github.com/tootsuite/mastodon/) uses. That version will also need to be enabled.
+[Ruby](https://github.com/rails/rails) version which [Mastodon](https://github.com/tootsuite/mastodon/) uses. That version will also need to be enabled.
 
 To enable [Ruby](https://github.com/rails/rails), run:
 
@@ -142,9 +134,9 @@ rbenv global 2.4.1
 
 ### node.js And Ruby Dependencies
 
-Now that [Ruby](https://github.com/rails/rails) is installed and ready to go, we will clone the [Mastodon git repository](https://github.com/tootsuite/mastodon/) and install the [Ruby](https://github.com/rails/rails) and [node.js](https://nodejs.org/en/) dependancies.
+Now that [Ruby](https://github.com/rails/rails) is enabled, we will clone the [Mastodon git repository](https://github.com/tootsuite/mastodon/) and install the [Ruby](https://github.com/rails/rails) and [node.js](https://nodejs.org/en/) dependancies.
 
-Run the following to do that:
+Run the following to clone and install:
 
 ```sh
 # Return to mastodon user's home directory
@@ -163,9 +155,7 @@ bundle install --deployment --without development test
 yarn install --pure-lockfile
 ```
 
-That is all we need to do for now with the `mastodon` user, you can now `exit` back to root[^2].
-
-[^2]: Or if you're using `tmux`, then switch back to the window where you are logged in as root
+That is all we need to do for now with the `mastodon` user, you can now `exit` back to root.
 
 ## PostgreSQL Database Creation
 
@@ -302,14 +292,12 @@ This configuration makes the assumption you are using [Let's Encrypt](https://le
 next sub-section. If not edit the `ssl_certificate` and `ssl_certificate_key` values
 accordingly.**
 
-----
-
 ## Let's Encrypt
 
 This section is only relevant if you are using [Let's Encrypt](https://letsencrypt.org/)
 as your TLS certificate provider.
 
-### Generation of certificate
+### Generation Of The Certificate
 
 We need to generate Let's Encrypt certificates.
 
@@ -324,8 +312,6 @@ systemctl stop nginx
 We will be creating the certificate twice, once with TLS SNI validation in standalone mode and the second time we will be using the webroot method. This is required due to the way
 [nginx](http://nginx.org) and the [Let's Encrypt](https://letsencrypt.org/) tool works.
 
-The TLS SNI standalone method requires [nginx](http://nginx.org) stopped as previously mentioned:
-
 ```sh 
 letsencrypt certonly --standalone -d example.com
 ```
@@ -338,7 +324,7 @@ systemctl start nginx
 letsencrypt certonly --webroot -d example.com -w /home/mastodon/live/public/
 ```
 
-### Automated renewal of Let's Encrypt certificate
+### Automated Renewal Of Let's Encrypt Certificate
 
 [Let's Encrypt](https://letsencrypt.org/) certificates have a validity period of 90 days.
 
@@ -367,18 +353,14 @@ chmod +x /etc/cron.daily/letsencrypt-renew
 systemctl restart cron
 ```
 
-That is it. Your server will now automatically renew your [Let's Encrypt](https://letsencrypt.org/) certificate.
+That is it. Your server will renew your [Let's Encrypt](https://letsencrypt.org/) certificate.
 
-----
+## Mastodon Application Configuration
 
-## Mastodon application configuration
+We will configure the Mastodon application.
 
-Now we will configure the Mastodon application.
+For this we will switch to the `mastodon` system user:
 
-For this we will go back to the `mastodon` system user[^3]:
-
-[^3]: Or if you are using `tmux`
-switch back to the window that has that user logged in.
 
 ```sh
 su - mastodon
@@ -392,7 +374,7 @@ cp .env.production.sample .env.production
 nano .env.production
 ```
 
-For the purposes of this guide, these are the values that need to be edited:
+For the purposes of this guide, these are the values to be edited:
 
 ```
 # Your Redis host
@@ -429,13 +411,13 @@ SMTP_PASSWORD=
 SMTP_FROM_ADDRESS=
 ```
 
-After that is complete, we will need to set up the [PostgreSQL](https://www.postgresql.org) database for the first time:
+We now need to set up the [PostgreSQL](https://www.postgresql.org) database for the first time:
 
 ```sh
 RAILS_ENV=production bundle exec rails db:setup
 ```
 
-And then we will need to precompile all CSS and JavaScript files:
+Then we will need to precompile all CSS and JavaScript files:
 
 ```sh
 RAILS_ENV=production bundle exec rails assets:precompile
@@ -526,6 +508,6 @@ systemctl start mastodon-sidekiq.service
 systemctl start mastodon-streaming.service
 ```
 
-That's all!. If everything was done correctly, a [Mastodon](https://github.com/tootsuite/mastodon/) instance will appear when you visit `https://example.com` in a web browser.
+That is all! If everything was done correctly, a [Mastodon](https://github.com/tootsuite/mastodon/) instance will appear when you visit `https://example.com` in a web browser.
 
 Congratulations and welcome to the fediverse!
