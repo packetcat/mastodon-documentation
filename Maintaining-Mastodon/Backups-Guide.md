@@ -58,4 +58,17 @@ Here is an example:
 pg_dump mastodon_production > mastodon_production.sql
 ```
 
-If you are looking for a pre-written set of scripts to maintain PostgreSQL backups using pg_dump, you can find them [here](https://wiki.postgresql.org/wiki/Automated_Backup_on_Linux)
+If you are looking for a pre-written set of scripts to maintain PostgreSQL backups using pg_dump, you can find them [here](https://wiki.postgresql.org/wiki/Automated_Backup_on_Linux).
+
+## User generated content (images, avatars, headers)
+
+Day to day usage of a production Mastodon instance will result in user
+generated content such as images, user avatars and headers. This data needs
+to be backed up regularly.
+
+If the [Production Guide](../Running-Mastodon/Production-Guide.md) is used, this
+content will be stored in `/home/mastodon/live/public/system`.
+
+Various methods can be used to back up this directory, here are some:
+* [rsync](https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps) to an offsite backup server
+* Synced to an AWS S3 bucket using the [AWS CLI tool](http://docs.aws.amazon.com/cli/latest/reference/s3/sync.html)
