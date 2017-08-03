@@ -72,3 +72,13 @@ content will be stored in `/home/mastodon/live/public/system`.
 Various methods can be used to back up this directory, here are some:
 * [rsync](https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps) to an offsite backup server
 * Synced to an AWS S3 bucket using the [AWS CLI tool](http://docs.aws.amazon.com/cli/latest/reference/s3/sync.html)
+
+## Mastodon application secrets
+
+It is also highly recommended to keep your application configuration file
+.env.production backed up.
+
+If you the [Production Guide](../Running-Mastodon/Production-Guide.md) is used
+this file is stored in `/home/mastodon/live/.env.production`.
+
+That file contains application secrets used for things like 2 factor authentication and VAPID keys used for Web Push notifications.
